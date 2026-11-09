@@ -1,0 +1,43 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  rtl:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install EDA tools
+        run: sudo apt-get update && sudo apt-get install -y iverilog verilator yosys
+      - name: Python reference tests
+        run: make test-python
+      - name: RTL unit, array, top-level and random regression
+        run: make test-mac test-pe test-outbuf test-array test-top test-random
+      - name: Verilator lint
+        run: make lint
+      - name: Yosys synthesis (open-source; no vendor tools)
+        run: bash scripts/run_synthesis.sh
+      - name: Upload synthesis reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: yosys-reports
+          path: |
+            reports/synthesis/*.txt
+            reports/utilization/*.txt
+
+  digital-twin:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: digital-twin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: digital-twin/package-lock.json
+      - run: npm ci
+      - run: npm run test
+      - run: npm run build
