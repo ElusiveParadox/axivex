@@ -1,0 +1,193 @@
+
+14. Printing statistics.
+
+=== $paramod$174639793641f67d9f356196e99aa2188f4235c1\mac_unit ===
+
+   Number of wires:                  6
+   Number of wire bits:            128
+   Number of public wires:           6
+   Number of public wire bits:     128
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $add                            1
+     $mul                            1
+
+=== $paramod$174639793641f67d9f356196e99aa2188f4235c1\processing_element ===
+
+   Number of wires:                 28
+   Number of wire bits:            164
+   Number of public wires:          22
+   Number of public wire bits:     158
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 18
+     $and                            2
+     $logic_not                      1
+     $logic_or                       1
+     $mux                            1
+     $not                            1
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\mac_unit      1
+     $reduce_and                     1
+     $reduce_or                      1
+     $sdff                           7
+     $sdffe                          2
+
+=== $paramod$174639793641f67d9f356196e99aa2188f4235c1\systolic_array_4x4 ===
+
+   Number of wires:                 17
+   Number of wire bits:           1011
+   Number of public wires:          17
+   Number of public wire bits:    1011
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 16
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\processing_element     16
+
+=== $paramod$44cd147fb91e779aa0509036dc04b2306d3a3cfa\skew_scheduler ===
+
+   Number of wires:                 58
+   Number of wire bits:            787
+   Number of public wires:          38
+   Number of public wire bits:     581
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 44
+     $add                            3
+     $eq                             4
+     $logic_and                     11
+     $logic_not                      3
+     $lt                             4
+     $mux                            8
+     $shiftx                         8
+     $sub                            3
+
+=== $paramod$d959c00064984aeb56aa60240f8f5bcb728e8731\array_controller ===
+
+   Number of wires:                 30
+   Number of wire bits:             54
+   Number of public wires:          11
+   Number of public wire bits:      18
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $add                            1
+     $eq                             5
+     $logic_not                      1
+     $mux                            5
+     $ne                             5
+     $or                             2
+     $pmux                           2
+     $reduce_and                     2
+     $reduce_bool                    1
+     $sdffe                          2
+
+=== $paramod\input_buffers\DATA_W=s32'00000000000000000000000000001000 ===
+
+   Number of wires:                  7
+   Number of wire bits:            515
+   Number of public wires:           7
+   Number of public wire bits:     515
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $sdffe                          2
+
+=== $paramod\output_buffer\ACC_W=s32'00000000000000000000000000100000 ===
+
+   Number of wires:                 33
+   Number of wire bits:           1214
+   Number of public wires:          13
+   Number of public wire bits:    1104
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 57
+     $add                           16
+     $and                            1
+     $logic_not                      1
+     $logic_or                       1
+     $or                             1
+     $reduce_and                     2
+     $reduce_or                      1
+     $sdff                           1
+     $sdffe                         33
+
+=== axivex_top ===
+
+   Number of wires:                 29
+   Number of wire bits:           1672
+   Number of public wires:          29
+   Number of public wire bits:    1672
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\systolic_array_4x4      1
+     $paramod$44cd147fb91e779aa0509036dc04b2306d3a3cfa\skew_scheduler      1
+     $paramod$d959c00064984aeb56aa60240f8f5bcb728e8731\array_controller      1
+     $paramod\input_buffers\DATA_W=s32'00000000000000000000000000001000      1
+     $paramod\output_buffer\ACC_W=s32'00000000000000000000000000100000      1
+     matrix_data_interface           1
+
+=== matrix_data_interface ===
+
+   Number of wires:                 10
+   Number of wire bits:             10
+   Number of public wires:           8
+   Number of public wire bits:       8
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     $and                            3
+     $not                            2
+     $sdff                           1
+
+=== design hierarchy ===
+
+   axivex_top                        1
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\systolic_array_4x4      1
+       $paramod$174639793641f67d9f356196e99aa2188f4235c1\processing_element     16
+         $paramod$174639793641f67d9f356196e99aa2188f4235c1\mac_unit      1
+     $paramod$44cd147fb91e779aa0509036dc04b2306d3a3cfa\skew_scheduler      1
+     $paramod$d959c00064984aeb56aa60240f8f5bcb728e8731\array_controller      1
+     $paramod\input_buffers\DATA_W=s32'00000000000000000000000000001000      1
+     $paramod\output_buffer\ACC_W=s32'00000000000000000000000000100000      1
+     matrix_data_interface           1
+
+   Number of wires:                728
+   Number of wire bits:           9935
+   Number of public wires:         571
+   Number of public wire bits:    9485
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                439
+     $add                           36
+     $and                           36
+     $eq                             9
+     $logic_and                     11
+     $logic_not                     21
+     $logic_or                      17
+     $lt                             4
+     $mul                           16
+     $mux                           29
+     $ne                             5
+     $not                           18
+     $or                             3
+     $pmux                           2
+     $reduce_and                    20
+     $reduce_bool                    1
+     $reduce_or                     17
+     $sdff                         114
+     $sdffe                         69
+     $shiftx                         8
+     $sub                            3
+

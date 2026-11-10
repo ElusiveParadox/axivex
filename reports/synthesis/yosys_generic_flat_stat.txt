@@ -1,0 +1,29 @@
+
+17. Printing statistics.
+
+=== axivex_top ===
+
+   Number of wires:              17267
+   Number of wire bits:          26097
+   Number of public wires:         553
+   Number of public wire bits:    9383
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              19355
+     $_ANDNOT_                    5720
+     $_AND_                        648
+     $_MUX_                        194
+     $_NAND_                       606
+     $_NOR_                       1038
+     $_NOT_                        765
+     $_ORNOT_                      389
+     $_OR_                        2060
+     $_SDFFE_PN0P_                 263
+     $_SDFFE_PP0N_                  32
+     $_SDFFE_PP0P_                1515
+     $_SDFF_PN0_                     1
+     $_SDFF_PP0_                   226
+     $_XNOR_                      2259
+     $_XOR_                       3639
+

@@ -1,0 +1,183 @@
+
+12. Printing statistics.
+
+=== $paramod$174639793641f67d9f356196e99aa2188f4235c1\mac_unit ===
+
+   Number of wires:                  9
+   Number of wire bits:            224
+   Number of public wires:           6
+   Number of public wire bits:     128
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 41
+     CARRY4                          8
+     DSP48E1                         1
+     LUT2                           32
+
+=== $paramod$174639793641f67d9f356196e99aa2188f4235c1\processing_element ===
+
+   Number of wires:                 24
+   Number of wire bits:            160
+   Number of public wires:          21
+   Number of public wire bits:     157
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 90
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\mac_unit      1
+     FDRE                           85
+     LUT2                            2
+     LUT4                            1
+     LUT6                            1
+
+=== $paramod$174639793641f67d9f356196e99aa2188f4235c1\systolic_array_4x4 ===
+
+   Number of wires:                 17
+   Number of wire bits:           1011
+   Number of public wires:          17
+   Number of public wire bits:    1011
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 16
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\processing_element     16
+
+=== $paramod$44cd147fb91e779aa0509036dc04b2306d3a3cfa\skew_scheduler ===
+
+   Number of wires:                102
+   Number of wire bits:            696
+   Number of public wires:          30
+   Number of public wire bits:     517
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                144
+     CARRY4                          5
+     INV                             3
+     LUT2                           64
+     LUT3                            5
+     LUT4                            3
+     LUT6                           64
+
+=== $paramod$d959c00064984aeb56aa60240f8f5bcb728e8731\array_controller ===
+
+   Number of wires:                 30
+   Number of wire bits:             60
+   Number of public wires:          11
+   Number of public wire bits:      18
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 33
+     CARRY4                          1
+     FDRE                            7
+     INV                             8
+     LUT2                            8
+     LUT3                            3
+     LUT5                            1
+     LUT6                            4
+     MUXF7                           1
+
+=== $paramod\input_buffers\DATA_W=s32'00000000000000000000000000001000 ===
+
+   Number of wires:                263
+   Number of wire bits:            771
+   Number of public wires:           7
+   Number of public wire bits:     515
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                512
+     FDRE                          256
+     INV                           256
+
+=== $paramod\output_buffer\ACC_W=s32'00000000000000000000000000100000 ===
+
+   Number of wires:                 43
+   Number of wire bits:           1212
+   Number of public wires:          12
+   Number of public wire bits:    1099
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                590
+     CARRY4                          2
+     FDRE                          534
+     LUT2                            9
+     LUT3                            1
+     LUT4                            8
+     LUT5                            4
+     LUT6                           26
+     MUXF7                           5
+     MUXF8                           1
+
+=== axivex_top ===
+
+   Number of wires:                 41
+   Number of wire bits:           2449
+   Number of public wires:          29
+   Number of public wire bits:    1672
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                783
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\systolic_array_4x4      1
+     $paramod$44cd147fb91e779aa0509036dc04b2306d3a3cfa\skew_scheduler      1
+     $paramod$d959c00064984aeb56aa60240f8f5bcb728e8731\array_controller      1
+     $paramod\input_buffers\DATA_W=s32'00000000000000000000000000001000      1
+     $paramod\output_buffer\ACC_W=s32'00000000000000000000000000100000      1
+     BUFG                            1
+     IBUF                          259
+     OBUF                          517
+     matrix_data_interface           1
+
+=== matrix_data_interface ===
+
+   Number of wires:                  8
+   Number of wire bits:              8
+   Number of public wires:           7
+   Number of public wire bits:       7
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  4
+     FDRE                            1
+     INV                             1
+     LUT3                            2
+
+=== design hierarchy ===
+
+   axivex_top                        1
+     $paramod$174639793641f67d9f356196e99aa2188f4235c1\systolic_array_4x4      1
+       $paramod$174639793641f67d9f356196e99aa2188f4235c1\processing_element     16
+         $paramod$174639793641f67d9f356196e99aa2188f4235c1\mac_unit      1
+     $paramod$44cd147fb91e779aa0509036dc04b2306d3a3cfa\skew_scheduler      1
+     $paramod$d959c00064984aeb56aa60240f8f5bcb728e8731\array_controller      1
+     $paramod\input_buffers\DATA_W=s32'00000000000000000000000000001000      1
+     $paramod\output_buffer\ACC_W=s32'00000000000000000000000000100000      1
+     matrix_data_interface           1
+
+   Number of wires:               1032
+   Number of wire bits:          12351
+   Number of public wires:         545
+   Number of public wire bits:    9399
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               4140
+     BUFG                            1
+     CARRY4                        136
+     DSP48E1                        16
+     FDRE                         2158
+     IBUF                          259
+     INV                           268
+     LUT2                          625
+     LUT3                           11
+     LUT4                           27
+     LUT5                            5
+     LUT6                          110
+     MUXF7                           6
+     MUXF8                           1
+     OBUF                          517
+

@@ -1,0 +1,4 @@
+tool:    Yosys 0.33 (git sha1 2584903a060)
+date:    2026-11-14
+top:     axivex_top
+sources: rtl/mac_unit.v rtl/processing_element.v rtl/systolic_array_4x4.v rtl/input_buffers.v rtl/skew_scheduler.v rtl/array_controller.v rtl/output_buffer.v rtl/matrix_data_interface.v rtl/axivex_top.v
