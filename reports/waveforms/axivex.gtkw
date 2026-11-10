@@ -1,0 +1,59 @@
+[*] AXIVEX GTKWave save file (signal list written by hand; not opened in a GUI in the build environment)
+[dumpfile] "reports/waveforms/axivex_directed.vcd"
+[timestart] 0
+@200
+-Host interface
+@28
+tb_axivex_top.clk
+tb_axivex_top.rst_n
+tb_axivex_top.start
+tb_axivex_top.busy
+tb_axivex_top.done
+tb_axivex_top.c_valid
+tb_axivex_top.start_rejected
+@200
+-Controller
+@22
+tb_axivex_top.dut.u_ctrl.state[2:0]
+tb_axivex_top.dut.u_ctrl.cycle_count[3:0]
+@200
+-Skew scheduler outputs (array edge)
+@22
+tb_axivex_top.dut.u_sched.a_data[31:0]
+tb_axivex_top.dut.u_sched.b_data[31:0]
+@28
+tb_axivex_top.dut.u_sched.a_valid[3:0]
+tb_axivex_top.dut.u_sched.b_valid[3:0]
+tb_axivex_top.dut.u_sched.a_last[3:0]
+tb_axivex_top.dut.u_sched.b_last[3:0]
+@200
+-All PEs (flattened taps: index i*4+j)
+@28
+tb_axivex_top.pe_av[15:0]
+tb_axivex_top.pe_bv[15:0]
+tb_axivex_top.pe_rv[15:0]
+@22
+tb_axivex_top.pe_a[127:0]
+tb_axivex_top.pe_b[127:0]
+tb_axivex_top.pe_acc[511:0]
+@200
+-PE(0,0)
+@22
+tb_axivex_top.dut.u_array.g_row[0].g_col[0].u_pe.a_in[7:0]
+tb_axivex_top.dut.u_array.g_row[0].g_col[0].u_pe.b_in[7:0]
+tb_axivex_top.dut.u_array.g_row[0].g_col[0].u_pe.acc[31:0]
+@28
+tb_axivex_top.dut.u_array.g_row[0].g_col[0].u_pe.result_valid
+@200
+-PE(3,3)
+@22
+tb_axivex_top.dut.u_array.g_row[3].g_col[3].u_pe.a_in[7:0]
+tb_axivex_top.dut.u_array.g_row[3].g_col[3].u_pe.b_in[7:0]
+tb_axivex_top.dut.u_array.g_row[3].g_col[3].u_pe.acc[31:0]
+@28
+tb_axivex_top.dut.u_array.g_row[3].g_col[3].u_pe.result_valid
+@200
+-Output
+@22
+tb_axivex_top.dut.u_out.capture_count[4:0]
+tb_axivex_top.c_flat[511:0]
