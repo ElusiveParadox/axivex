@@ -1,0 +1,17 @@
+build/
+obj_dir/
+node_modules/
+digital-twin/dist/
+*.out
+__pycache__/
+*.pyc
+reports/waveforms/*.vcd
+docs/report/*.aux
+docs/report/*.log
+docs/report/*.bbl
+docs/report/*.blg
+docs/report/*.out
+docs/report/*.fls
+docs/report/*.fdb_latexmk
+.DS_Store
+devs.sh

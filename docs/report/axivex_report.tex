@@ -1,0 +1,152 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{array}
+\begin{document}
+
+\title{AXIVEX: A Modular 4$\times$4 Systolic-Array Accelerator for High-Performance Matrix Multiplication\\
+\large Phase I Report}
+
+\author{\IEEEauthorblockN{[Member 1 -- primary developer], [Member 2], [Member 3], [Member 4], [Member 5]}
+\IEEEauthorblockA{Modern Computer Architecture course project (names to be completed by the group)}}
+
+\maketitle
+
+\begin{abstract}
+AXIVEX is a synthesizable Verilog implementation of a 4$\times$4 output-stationary systolic array that
+computes $C=AB$ for signed INT8 matrices with INT32 accumulation. This Phase I report documents the architecture,
+the verification flow and the results obtained so far: the RTL passes exhaustive MAC, unit, array and top-level tests,
+a 128-transaction seeded random regression against an independent Python model and a mutation check of the test suite
+(18 of 18 non-equivalent injected bugs detected). In simulation, a job takes 13 cycles from start to done, of which 10
+are the compute window for 64 multiply-accumulates (40\% PE utilization in that window). An open-source Yosys mapping to
+Xilinx 7-series primitives yields 16 DSP48E1, 1399 flip-flops and 202 LUTs. No Vivado timing, Fmax or board result exists yet;
+none is claimed. A browser Digital Twin, cross-validated against RTL traces, visualizes the dataflow.
+\end{abstract}
+
+\begin{IEEEkeywords}
+systolic array, matrix multiplication, FPGA, Verilog, output-stationary dataflow, INT8
+\end{IEEEkeywords}
+
+\section{Introduction and Motivation}
+Matrix multiplication dominates neural-network inference. A sequential engine with one multiply-accumulate (MAC) unit
+needs $MNK$ cycles for an $M\times K$ by $K\times N$ product; a spatial array performs many MACs per cycle and reuses each
+operand as it moves between neighbouring processing elements (PEs). AXIVEX is a small, fully verified instance of this idea,
+built to be inspected, simulated and synthesized with free tools only.
+
+\section{Literature Review}
+Kung argued that systolic architectures, regular arrays in which data flows rhythmically through many PEs, allow multiple
+computations per memory access and so suit compute-bound problems without raising I/O requirements \cite{kung1982}.
+The Google TPU is a prominent production example: its core is a 65,536-MAC 8-bit matrix unit \cite{jouppi2017}.
+Gemmini is an open-source generator of systolic accelerators with selectable dataflows and a full software stack \cite{genc2021}.
+Eyeriss analyses dataflows for convolutional networks and proposes the row-stationary dataflow \cite{chen2016}.
+
+\section{Existing Approaches and Limitations}
+General-purpose cores execute matrix products with few MACs per cycle and many operand fetches. Large accelerators
+\cite{jouppi2017,genc2021} are too complex to study end to end in a course project. A minimal, parameter-light array that
+is verified cycle by cycle fills that gap but, as built here, is limited to a fixed size and a wide parallel interface.
+
+\section{Problem Statement}
+Design, implement and verify in synthesizable Verilog a 4$\times$4 array computing $C_{4\times4}=A_{4\times4}B_{4\times4}$
+with signed INT8 inputs and signed INT32 accumulation using 16 PEs, output-stationary dataflow, east-moving A and south-moving B.
+
+\section{Proposed Solution}
+\subsection{High-level architecture}
+Fig.~\ref{fig:hld} shows the blocks: host interface, input buffers, skew scheduler, controller, 16-PE mesh and output buffer
+(\texttt{rtl/}: nine modules). Data flows Host $\rightarrow$ input buffers $\rightarrow$ scheduler $\rightarrow$ PE mesh $\rightarrow$ output buffer $\rightarrow$ Host.
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{../architecture/hld.pdf}
+\caption{High-level architecture of \texttt{axivex\_top}.}\label{fig:hld}
+\end{figure}
+
+\subsection{PE microarchitecture}
+Each PE holds registered copies of the A and B operands and their valid/last flags (one hop per clock), a 32-bit accumulator,
+a result register and \texttt{result\_valid}. A MAC fires only when both operands are valid:
+$acc\leftarrow acc+a\cdot b$, with the product sign-extended from 16 to 32 bits. When both last flags coincide the same sum is written to
+the result register and \texttt{result\_valid} pulses once.
+
+\subsection{Dataflow and schedule}
+Row $i$ injects $A[i][k]$ at cycle $t=i+k$ and column $j$ injects $B[k][j]$ at $t=j+k$; both reach PE$(i,j)$ at
+$t=i+j+k$. The final MAC of PE$(i,j)$ is at $t=K-1+i+j$, so the compute window is $K+M+N-2=10$ cycles and the last PE finishes at
+$t=9$. Last markers travel with the operands instead of a global pulse, because the skew gives every PE a different final cycle.
+
+\subsection{Controller}
+IDLE $\rightarrow$ CLEAR (1 cycle) $\rightarrow$ RUN (10) $\rightarrow$ RETIRE (1) $\rightarrow$ DONE (1-cycle pulse). RETIRE ends when all 16
+results are captured or arriving in that cycle, which counts simultaneous result pulses correctly.
+
+\section{Verilog Implementation}
+The RTL is Verilog-2001 with explicit signed arithmetic, nonblocking assignments, synchronous active-low reset and flat packed ports
+(row-major index $4i+j$). Verilator \texttt{-Wall} lint is clean. Interface and protocol rules are in \texttt{docs/architecture}.
+
+\section{Verification Methodology}
+Testbenches (SystemVerilog, Icarus Verilog 12.0) cover the MAC (all 65,536 INT8 pairs $\times$ 6 accumulator seeds), the PE, the output buffer,
+the array (own skew driver, per-PE operand and cycle checks) and the top level. A cycle-by-cycle monitor checks 20+ properties
+(valid/last alignment, accumulate-only-when-valid, forwarding without data loss, exactly one result per PE, no early \texttt{done}).
+An independent Python model computes $C=\sum_k A_{ik}B_{kj}$ directly and generates directed vectors (identity, zero, ones, signs, diagonal,
+sparse, INT8 extremes, back-to-back) and 128 random matrix pairs (seed 20261116). Scenarios cover reset in IDLE/CLEAR/RUN/RETIRE, start while busy,
+held start and back-to-back starts. A mutation script injects 19 single-line bugs; the suite must fail on each.
+
+\section{Simulation Results}
+\begin{table}[t]\centering\caption{Verification results (Icarus Verilog 12.0).}\label{tab:ver}
+\begin{tabular}{@{}lr@{}}\toprule
+Test & Result\\\midrule
+MAC exhaustive & 393{,}218 checks, 0 errors\\
+PE unit & 42 checks, 0 errors\\
+Array & 77 jobs, 20{,}944 checks, 0 errors\\
+Top, directed + scenarios & 35 jobs, 0 failures\\
+Top, random & 128 jobs, 0 failures\\
+Mutation check & 18/18 non-equiv. killed\\\bottomrule
+\end{tabular}\end{table}
+\begin{table}[t]\centering\caption{Cycle accounting (measured in RTL simulation).}\label{tab:cyc}
+\begin{tabular}{@{}lr@{}}\toprule
+Quantity & Value\\\midrule
+Start-to-done latency & 13 cycles\\
+\quad load/start, CLEAR, RUN, RETIRE & 1, 1, 10, 1\\
+MACs per job & 64\\
+Active PEs per RUN cycle & 1,3,6,10,12,12,10,6,3,1\\
+PE utilization, RUN window & 40.0\%\\
+PE utilization, start-to-done & 30.8\%\\
+Single-MAC baseline compute (modelled) & 64 cycles\\
+Compute-only speedup (modelled baseline) & 6.4$\times$\\\bottomrule
+\end{tabular}\end{table}
+The single-MAC baseline is analytical, not implemented RTL, and the comparison is not area-normalised (16 MACs versus 1).
+The waveform (\texttt{reports/waveforms}) shows the wavefront and the anti-diagonal result pulses.
+
+\section{Initial Synthesis Results}
+Yosys 0.33 \texttt{synth\_xilinx -family xc7} (flattened) maps the design to 16 DSP48E1, 1399 FDRE, 202 LUT2--6, 6 CARRY4, plus 259 input and 517 output
+buffers for the packed ports; without flattening it reports 2158 FDRE and 136 CARRY4. These are open-source mapping counts, not Vivado results. Vivado scripts
+(\texttt{scripts/vivado}) were only syntax-checked with a Tcl stub; \textbf{no Vivado utilization, timing, Fmax or power result exists}, and no board was used.
+The flat 259/517-bit interface exceeds the pins of an xc7a35tcpg236-1, so implementation must be out-of-context.
+
+\section{Individual Contributions}
+\begin{table}[h]\centering\caption{Contribution table (to be completed by the group).}
+\begin{tabular}{@{}p{0.9in}p{2.1in}@{}}\toprule
+Member & Contribution\\\midrule
+{[Member 1]} & Primary developer of the Phase I implementation in this repository (RTL, tests, Digital Twin, scripts); verify against commit history\\
+{[Member 2]} & [to be filled]\\
+{[Member 3]} & [to be filled]\\
+{[Member 4]} & [to be filled]\\
+{[Member 5]} & [to be filled]\\\bottomrule
+\end{tabular}\end{table}
+
+\section{Limitations}
+Fixed 4$\times$4/$K{=}4$; wide parallel interface; combinational scheduler feeding the multiplier (timing impact unmeasured); no stall/backpressure;
+no Vivado timing; no gate-level simulation; baseline is modelled; Digital Twin cross-validated on 21 recorded RTL jobs and 149 Python vectors,
+not formally proven equivalent.
+
+\section{Conclusion}
+A 4$\times$4 output-stationary systolic multiplier was implemented and verified in simulation against an independent reference, with a measured
+13-cycle job (10-cycle compute window) and an open-source FPGA-primitive mapping. Phase II will add parameterization, a handshake interface,
+tiling/double buffering, a measured baseline and Vivado timing; none of it is part of this report's results.
+
+\begin{thebibliography}{1}
+\bibitem{kung1982} H. T. Kung, ``Why systolic architectures?,'' \emph{Computer}, vol. 15, no. 1, pp. 37--46, Jan. 1982, doi: 10.1109/MC.1982.1653825.
+\bibitem{jouppi2017} N. P. Jouppi \emph{et al.}, ``In-datacenter performance analysis of a tensor processing unit,'' in \emph{Proc. 44th Annu. Int. Symp. Comput. Archit. (ISCA)}, Toronto, ON, Canada, 2017, pp. 1--12, doi: 10.1145/3079856.3080246.
+\bibitem{genc2021} H. Genc \emph{et al.}, ``Gemmini: Enabling systematic deep-learning architecture evaluation via full-stack integration,'' in \emph{Proc. 58th ACM/IEEE Design Autom. Conf. (DAC)}, 2021, pp. 769--774, doi: 10.1109/DAC18074.2021.9586216; arXiv:1911.09925.
+\bibitem{chen2016} Y.-H. Chen, J. Emer, and V. Sze, ``Eyeriss: A spatial architecture for energy-efficient dataflow for convolutional neural networks,'' in \emph{Proc. 43rd Int. Symp. Comput. Archit. (ISCA)}, 2016, pp. 367--379, doi: 10.1109/ISCA.2016.40.
+\bibitem{iverilog} S. Williams, ``Icarus Verilog.'' [Online]. Available: https://steveicarus.github.io/iverilog/ (software documentation).
+\bibitem{yosys} C. Wolf, ``Yosys open synthesis suite.'' [Online]. Available: https://yosyshq.net/yosys/ (software documentation).
+\end{thebibliography}
+\end{document}
