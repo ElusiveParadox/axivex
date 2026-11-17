@@ -9,7 +9,22 @@
 
 \title{AXIVEX: A Modular 4$\times$4 Systolic-Array Accelerator for Matrix Multiplication}
 
-\author{}
+\author{
+\IEEEauthorblockN{Sushant Guri}
+\IEEEauthorblockA{\textit{Dept. of CS \& AI}}
+\and
+\IEEEauthorblockN{Manjeet}
+\IEEEauthorblockA{\textit{Dept. of CS \& AI}}
+\and
+\IEEEauthorblockN{Aryan}
+\IEEEauthorblockA{\textit{Dept. of CS \& AI}}
+\and
+\IEEEauthorblockN{Vidhi Singhal}
+\IEEEauthorblockA{\textit{Dept. of CS \& AI}}
+\and
+\IEEEauthorblockN{ElusiveParadox}
+\IEEEauthorblockA{\textit{Dept. of CS \& AI}}
+}
 
 \maketitle
 
@@ -314,6 +329,16 @@ Useful extensions include parameterizing array dimensions and reduction length, 
 adding a handshake or streaming protocol, and evaluating tiling or double buffering. A vendor timing run and a
 measured baseline would enable a more complete performance comparison. Such extensions require new verification and
 should be reported with measured results rather than inferred from the existing resource mapping.
+
+\section{Individual Contributions}
+The project was designed, implemented, and verified through coordinated teamwork across five members, as reflected in the repository commit history:
+\begin{itemize}
+    \item \textbf{Sushant Guri:} Implemented the output-stationary Processing Element (\texttt{processing\_element.v}), integrated the top-level accelerator interface (\texttt{axivex\_top.v}), authored directed and seeded random test vectors, and developed the cycle-accurate simulation engine for the Digital Twin.
+    \item \textbf{Manjeet:} Built the 4$\times$4 systolic array mesh (\texttt{systolic\_array\_4x4.v}), array control and output buffering (\texttt{output\_buffer.v}), authored unit testbenches for MAC and PE, and developed the matrix control UI in the Digital Twin.
+    \item \textbf{Aryan:} Engineered the input buffer pipelines and skew scheduler (\texttt{skew\_scheduler.v}), verified array dataflow timing (\texttt{tb\_systolic\_array.sv}), and created the architecture and mesh visualization interfaces.
+    \item \textbf{Vidhi Singhal:} Developed the Python matrix multiplication golden model (\texttt{matrix\_model.py}), unit tests, and designed the clock controls, overview, and register monitoring pages of the Digital Twin.
+    \item \textbf{ElusiveParadox:} Defined the system microarchitecture and pipeline timing, implemented the signed fixed-width MAC unit (\texttt{mac\_unit.v}), set up the Yosys synthesis and Artix-7 constraints, authored mutation testing regressions, and compiled the IEEE technical report.
+\end{itemize}
 
 \section{Conclusion}
 A 4$\times$4 output-stationary systolic multiplier was implemented and verified in simulation against an independent

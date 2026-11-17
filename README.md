@@ -20,6 +20,13 @@ PE(i,j) sees `A[i][k]` and `B[k][j]` at cycle `i+j+k`; a job takes **13 cycles s
 Problem: a single-MAC engine needs 64 sequential MAC cycles for a 4x4x4 product; a systolic array overlaps them across 16 PEs with
 local accumulation. (The 6.4x compute-only ratio is against a modelled, not implemented, baseline and is not area-normalised.)
 
+## Phase I Demonstration & Submission
+
+- **Prototype Demo Video & Artifacts (Google Drive):** [https://drive.google.com/drive/folders/1fQJKvKbC5t-IdNzp6T4kSd_ttkLuQOmP?usp=sharing](https://drive.google.com/drive/folders/1fQJKvKbC5t-IdNzp6T4kSd_ttkLuQOmP?usp=sharing)
+- **IEEE Project Report:** [docs/report/axivex_report.pdf](docs/report/axivex_report.pdf) (LaTeX Source: [docs/report/axivex_report.tex](docs/report/axivex_report.tex), Markdown: [docs/report/axivex_report.md](docs/report/axivex_report.md))
+- **Interactive Presentation Deck:** [docs/presentation_slides.html](../docs/presentation_slides.html)
+- **Interactive Waveform Inspector:** [sim/view_waveform.html](../sim/view_waveform.html)
+
 ## Repository layout
 
 | Path | Contents |
